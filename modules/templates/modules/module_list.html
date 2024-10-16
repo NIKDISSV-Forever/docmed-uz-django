@@ -1,0 +1,6 @@
+{% extends 'title_img_list.html' %}
+
+{% block title %}Separated Modules{% endblock %}
+{% block footer %}
+    <a href="{% url 'courses:modules:detail' object.pk %}" class="btn btn-primary">View Module</a>
+{% endblock %}

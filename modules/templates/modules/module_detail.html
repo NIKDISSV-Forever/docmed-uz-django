@@ -1,0 +1,222 @@
+{% extends 'base.html' %} {% load static %}
+{% block title %}{{ module.title }}{% endblock %}
+{% block content %}
+
+    <div class="module-detail">
+        <div style="display: flex; gap: 30px;height: 320px">
+            <img src="{{ module.image.url }}" alt="{{ module.title }} Photo"
+                 id="mark_video_watched" width="640">
+            {% if module.video %}
+                <iframe width="640" hidden="hidden" id="video"
+                        src="{{ module.video }}">Video not supported
+                </iframe>
+                <script>
+                    let img = document.getElementById('mark_video_watched')
+                    img.addEventListener('click', () => {
+                        img.hidden = true;
+                        document.getElementById('video').hidden = false
+                    });
+                </script>
+            {% endif %}
+            <div style="width: auto" class="overflow-auto">
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <h5>Timecodes</h5>
+                        <ul class="list-unstyled">
+                            {% for timecode in module.timecodes.all %}
+                                <li>
+                                    <span class="badge bg-primary">{{ timecode.time }}</span>
+                                    <span>{{ timecode.description }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <p>{{ module.description }}</p>
+
+        {% if module.speakers %}
+
+            <div class="col-md-4">
+                <h3>Speakers</h3>
+                <div class="d-flex">
+                    {% for speaker in module.speakers.all %}
+                        <div class="mr-3">
+                            {% if speaker.photo %}
+                                <img src="{{ speaker.photo.url }}" alt="{{ speaker.full_name }}" class="rounded-circle"
+                                     width="60" height="60">
+                            {% endif %}
+                        </div>
+                        <div>
+                            <a href="{% url 'courses:speaker_detail' speaker.pk %}">
+                                <p class="mb-0"><strong>{{ speaker.full_name }}</strong></p>
+                                <p class="text-muted">{{ speaker.position }}</p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="row mt-5">
+            <!-- Materials -->
+            {% if module.attaches.exists %}
+                <div class="col-md-8">
+                    <h5>Course Materials</h5>
+                    <div class="d-flex gap-3">
+                        {% if module.attaches.exists %}
+                            <div>
+                                <h6>Materials:</h6>
+                                <ul>
+
+                                    {% for attach in module.attaches.all %}
+                                        <li><a id='mark_files_downloaded' href="{{ attach.file.url }}"
+                                               download>{{ attach.file.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.drugs.exists %}
+                <!-- Drugs Section -->
+                <div class="col-md-4">
+                    {% if module.drugs.exists %}
+                        <h5>Medicines for this Module:</h5>
+                        <div class="d-flex">
+                            {% for drug in module.drugs.all %}
+                                <div class="card me-2">
+                                    <div class="card-body">
+                                        <a href="{% url 'courses:drug_detail' drug.pk %}">
+                                            {% if drug.image %}
+                                                <img src="{{ drug.image.url }}" class="img-fluid" alt="{{ drug.name }}">
+                                            {% endif %}
+                                            <p>{{ drug.name }}</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if module.sponsor %}
+            <h3>Sponsor:</h3>
+            <p>{{ module.sponsor.name }}</p>
+        {% endif %}
+
+
+
+
+        {% if user.is_authenticated %}
+            <!-- User Progress & Disclaimer Section -->
+            {% if not module.part_of_course %}
+                <div class="row mt-5">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Your digital certificate</h4>
+                                <p>You can download the certificate after completing the course.</p>
+                                <a href="{% url 'courses:modules:certificate' module.pk %}"
+                                   class="btn btn-outline-primary">
+                                    Download Certificate</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row mt-5">
+            <div class="col-md-8">
+                <h5>Your Progress:</h5>
+                <ul>
+                    <li>Video Watched: {% if module_progress.video_watched %}✔ Done{% else %}❌ Not
+                        Done{% endif %}</li>
+                    <li>Files Downloaded: {% if module_progress.files_downloaded %}✔ Done{% else %}❌ Not
+                        Done{% endif %}</li>
+                    <li>Test Passed: {% if module_progress.test_passed %}✔ Done{% else %}❌ Not Done{% endif %}</li>
+                </ul>
+                <div id="message"></div>
+            </div>
+            <button id="mark_test_passed" class="btn btn-outline-primary">Mark Test as Passed</button>
+
+            <script>
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                const csrfToken = getCookie('csrftoken');
+
+                async function updateProgress(field, value) {
+                    let url = '{% url "courses:modules:moduleprogress-detail" module_progress.pk %}';
+                    return await fetch(url, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({[field]: value}),
+                    })
+                        .then(response => {
+                            return response.json();
+                        })
+                        .catch(error => {
+                            document.getElementById('message').innerText = 'Update failed: ' + error.message;
+                        });
+                }
+
+                document.getElementById('mark_video_watched').addEventListener('click', () => {
+                    updateProgress('video_watched',
+                        true
+                    );
+                });
+                document.getElementById('mark_files_downloaded').addEventListener('click', () => {
+                    updateProgress('files_downloaded',
+                        {% if module_progress.mark_files_downloaded %}false{% else %}true{% endif %}
+                    ).then((_) => document.location.reload());
+                });
+
+                document.getElementById('mark_test_passed').addEventListener('click', () => {
+                    updateProgress('test_passed',
+                        {% if module_progress.test_passed %}false{% else %}true{% endif %}
+                    ).then((_) => document.location.reload());
+                });
+            </script>
+
+        {% endif %}
+        {% if module.tags.exists %}
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h5>Tags:</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tag in module.tags.all %}
+                            <span class="badge bg-warning">
+                    <a href="{% url 'courses:tag' tag.pk %}" class="text-decoration-none">{{ tag.name }}</a>
+                </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <hr>
+        {% if module.disclaimer %}
+            <b class="bg-danger rounded-3 overflow-auto text-center">{{ module.disclaimer }}</b>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

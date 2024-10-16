@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ tag.name }}</h1>
+
+    <p>This tag is used in the following:</p>
+
+    <ul>
+
+        {% for course in tag.courses_tags.all %}
+            <li><a href="{% url 'courses:detail' course.pk %}">{{ course.title }}</a></li>
+        {% endfor %}
+        <hr>
+        {% for module in tag.modules_tags.all %}
+            <li><a href="{% url 'courses:modules:detail' module.pk %}">{{ module.title }}</a></li>
+        {% endfor %}
+        <hr>
+        {% for drug in tag.drugs_tags.all %}
+            <li><a href="{% url 'courses:drug_detail' drug.pk %}">{{ drug.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

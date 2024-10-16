@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    {% if course.image %}
+                        <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+                    {% else %}
+                        <img src="{% static 'img/placeholder.png' %}" class="card-img-top" alt="No image available">
+                    {% endif %}
+                    <div class="card-body">
+                        <h1>{{ course.title }}</h1>
+                        <p class="lead">{{ course.description }}</p>
+                        <p><strong>{{ course.module_count }} modules</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <h4>Speakers</h4>
+                <div class="d-flex">
+                    {% for speaker in course.speakers.all %}
+                        <div class="mr-3">
+                            {% if speaker.photo %}
+                                <img src="{{ speaker.photo.url }}" alt="{{ speaker.full_name }}" class="rounded-circle"
+                                     width="60" height="60">
+                            {% endif %}
+                        </div>
+                        <div>
+                            <a href="{% url 'courses:speaker_detail' speaker.pk %}">
+                                <p class="mb-0"><strong>{{ speaker.full_name }}</strong></p>
+                                <p class="text-muted">{{ speaker.position }}</p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Course Modules</h4>
+                <div class="list-group mb-4">
+                    {% for module in course.modules.all %}
+                        <a href="{% url 'courses:modules:detail' module.pk %}"
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ module.title }}</h5>
+                            </div>
+                            <p class="mb-1">{{ module.description|truncatewords:15 }}</p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if course.drugs.exists %}
+                <div class="col-md-4">
+                    <h4>Medicines for this module</h4>
+                    <div class="card">
+                        <div>
+                            <div class="d-flex">
+                                {% for drug in course.drugs.all %}
+                                    <div class="mr-3">
+                                        {% if drug.image %}
+                                            <img src="{{ drug.image.url }}" alt="{{ drug.name }}" class="img-fluid"
+                                                 width="100">
+                                        {% else %}
+                                            <img src="{% static 'img/drug_placeholder.jpg' %}" alt="No image available"
+                                                 class="img-fluid" width="100">
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <p class="mb-1"><strong>{{ drug.name }}</strong></p>
+                                        <p class="text-muted">{{ drug.description|truncatewords:10 }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            {% endif %}
+
+        <div class="row mt-5">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Your digital certificate</h4>
+                        <p>You can download the certificate after completing the course.</p>
+                        <a href="{% url 'courses:certificate_detail' course.pk %}" class="btn btn-outline-primary">
+                            Download Certificate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if course.disclaimer %}
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="alert alert-warning">
+                        <p>{{ course.disclaimer }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

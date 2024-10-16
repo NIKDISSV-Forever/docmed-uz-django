@@ -1,0 +1,10 @@
+{% extends 'certificate.html' %}
+
+{% block body %}
+    <h4>Certificate for <a href="{% url 'courses:modules:detail' object.pk %}">{{ object.title }}</a></h4>
+    <p>Congratulations! You have completed all tasks for this module.</p>
+    <a href="#" class="btn btn-outline-primary">Download Certificate</a>
+{% endblock %}
+{% block footer %}
+    <a href="{% url 'courses:modules:detail' object.pk %}" class="btn btn-secondary">Back to Module</a>
+{% endblock %}

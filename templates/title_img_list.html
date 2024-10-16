@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">{% block title %}{% endblock %}</h1>
+
+        <div class="row">
+            {% for object in object_list %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if object.image %}
+                            <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.title }}">
+                        {% else %}
+                            <img src="{% static 'img/placeholder.png' %}" class="card-img-top" alt="No image available">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ object.title }}</h5>
+                            <p class="card-text">{{ object.description|truncatewords:20 }}</p>
+                            {% block body %}{% endblock %}
+                        </div>
+                        <div class="card-footer">
+                            {% block footer %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No available at the moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

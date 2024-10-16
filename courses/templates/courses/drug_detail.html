@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ drug.name }}{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Drug Image and Information -->
+            <div class="col-md-4">
+                {% if drug.image %}
+                    <img src="{{ drug.image.url }}" alt="{{ drug.name }}" class="img-fluid">
+                {% endif %}
+                <h2>{{ drug.name }}</h2>
+                <p>{{ drug.description }}</p>
+            </div>
+
+            <!-- Modules that include this Drug -->
+            <div class="col-md-8">
+                <h3>Modules with {{ drug.name }}</h3>
+                {% if drug.modules_drugs.exists %}
+                    <ul class="list-group">
+                        {% for module in drug.modules_drugs.all %}
+                            <li class="list-group-item">
+                                <a href="{% url 'courses:modules:detail' module.pk %}">
+                                    {{ module.title }}
+                                </a>
+                                <p>{{ module.description|truncatewords:20 }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No modules available for this drug.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

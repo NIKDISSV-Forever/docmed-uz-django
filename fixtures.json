@@ -1,0 +1,169 @@
+[
+  {
+    "model": "courses.tag",
+    "pk": 1,
+    "fields": {
+      "name": "Medical"
+    }
+  },
+  {
+    "model": "courses.tag",
+    "pk": 2,
+    "fields": {
+      "name": "Pharmacology"
+    }
+  },
+  {
+    "model": "courses.speaker",
+    "pk": 1,
+    "fields": {
+      "photo": "",
+      "full_name": "Dr. John Smith",
+      "position": "Pharmacologist",
+      "courses": []
+    }
+  },
+  {
+    "model": "courses.drug",
+    "pk": 1,
+    "fields": {
+      "name": "Aspirin",
+      "image": "",
+      "description": "A medication used to reduce pain, fever, or inflammation.",
+      "tags": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 1,
+    "fields": {
+      "title": "Comprehensive Medical Course",
+      "image": "",
+      "description": "A comprehensive course covering essential medical knowledge.",
+      "module_count": 2,
+      "disclaimer": "This course is for medical professionals and students.",
+      "modules": [
+        1,
+        2
+      ],
+      "speakers": [
+        1
+      ],
+      "attaches": [],
+      "drugs": [
+        1
+      ],
+      "tags": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "model": "courses.attach",
+    "pk": 1,
+    "fields": {
+      "file": "attachments/sample_medical_study.pdf"
+    }
+  },
+  {
+    "model": "modules.moduleprogress",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "module": 1,
+      "video_watched": true,
+      "files_downloaded": true,
+      "test_passed": true
+    }
+  },
+  {
+    "model": "modules.moduleprogress",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "module": 2,
+      "video_watched": true,
+      "files_downloaded": true,
+      "test_passed": true
+    }
+  },
+  {
+    "model": "modules.sponsor",
+    "pk": 1,
+    "fields": {
+      "name": "Health Education Foundation"
+    }
+  },
+  {
+    "model": "modules.timecode",
+    "pk": 1,
+    "fields": {
+      "module": 1,
+      "time": "00:01:00",
+      "description": "Introduction to the course."
+    }
+  },
+  {
+    "model": "modules.timecode",
+    "pk": 2,
+    "fields": {
+      "module": 2,
+      "time": "00:03:00",
+      "description": "Understanding drug classifications."
+    }
+  },
+  {
+    "model": "modules.module",
+    "pk": 1,
+    "fields": {
+      "title": "Introduction to Medical Terminology",
+      "video": "https://example.com/videos/introduction_to_medical_terminology.mp4",
+      "image": "module/20241016_150019.jpg",
+      "description": "A comprehensive introduction to medical terminology and its application in healthcare.",
+      "sponsor": null,
+      "disclaimer": "This module is for educational purposes only.",
+      "part_of_course": false,
+      "speakers": [
+        1
+      ],
+      "drugs": [
+        1
+      ],
+      "attaches": [
+        1
+      ],
+      "tags": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "modules.module",
+    "pk": 2,
+    "fields": {
+      "title": "Pharmacology Basics",
+      "video": "https://example.com/videos/pharmacology_basics.mp4",
+      "image": "module/20241016_145705.png",
+      "description": "An overview of basic pharmacological concepts and drug classifications.",
+      "sponsor": 1,
+      "disclaimer": "Prerequisites apply.",
+      "part_of_course": true,
+      "speakers": [
+        1
+      ],
+      "drugs": [
+        1
+      ],
+      "attaches": [
+        1
+      ],
+      "tags": [
+        1,
+        2
+      ]
+    }
+  }
+]

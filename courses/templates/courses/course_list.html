@@ -1,0 +1,11 @@
+{% extends 'title_img_list.html' %}
+
+{% block title %}Courses{% endblock %}
+{% block body %}
+    <p class="card-text">
+        <small class="text-muted">Modules: {{ object.module_count }}</small>
+    </p>
+{% endblock %}
+{% block footer %}
+    <a href="{% url 'courses:detail' object.pk %}" class="btn btn-primary">View Course</a>
+{% endblock %}

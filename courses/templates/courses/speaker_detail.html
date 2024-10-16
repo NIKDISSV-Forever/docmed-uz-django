@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ speaker.full_name }}{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Speaker Information -->
+            <div class="col-md-4">
+                {% if speaker.image %}
+                    <img src="{{ speaker.image.url }}" alt="{{ speaker.full_name }}" class="img-fluid rounded-circle">
+                {% endif %}
+                <h2>{{ speaker.full_name }}</h2>
+                <p>{{ speaker.bio }}</p>
+            </div>
+
+            <!-- Modules by Speaker -->
+            <div class="col-md-8">
+                <h3>Modules by {{ speaker.full_name }}</h3>
+                {% if speaker.modules_speakers.exists %}
+                    <ul class="list-group">
+                        {% for module in speaker.modules_speakers.all %}
+                            <li class="list-group-item">
+                                <a href="{% url 'courses:modules:detail' module.pk %}">
+                                    {{ module.title }}
+                                </a>
+                                <p>{{ module.description|truncatewords:20 }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No modules available for this speaker.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
