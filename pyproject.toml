@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "docmed"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "DocMed-Uz Platform"
+authors = ["Nikita <nikdissv@proton.me>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
