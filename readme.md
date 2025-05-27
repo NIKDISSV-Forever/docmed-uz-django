@@ -101,5 +101,5 @@ DocMed-Uz is a comprehensive Django-based web platform designed to provide medic
 
 ## 📄 License
 
-This project is licensed under the terms of the custom license. Please see the `LICENSE` file for full details.
+This project is licensed under the terms of the custom license. Please see the [LICENSE](./LICENSE) file for full details.
 Third-party libraries and dependencies included in this project are subject to their own respective licenses.
