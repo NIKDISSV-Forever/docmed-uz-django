@@ -1,17 +1,19 @@
-[tool.poetry]
+[project]
 name = "docmed"
-version = "0.1.0"
+version = "0.2.0"
 description = "DocMed-Uz Platform"
-authors = ["Nikita <nikdissv@proton.me>"]
+authors = [
+    { name = "Nikita Denissov", email = "n.denissov@proton.me" }
+]
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.13"
-django = "^5.1.2"
-pillow = "^11.0.0"
-djangorestframework = "^3.15.2"
+requires-python = ">=3.13"
+dependencies = [
+    "django (>=6.0.2,<7.0.0)",
+    "pillow (>=12.1.1,<13.0.0)",
+    "djangorestframework (>=3.16.1,<4.0.0)"
+]
 
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
